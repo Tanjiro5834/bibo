@@ -36,4 +36,52 @@ class PageController extends Controller
     {
         return view('pages.user.settings');
     }
+
+    public function research()
+    {
+        return view('pages.user.research');
+    }
+
+    
+    public function tutor()
+    {
+        return view('pages.user.tutor');
+    }
+
+    public function tutorChat(Request $request)
+{
+    try {
+        $request->validate([
+            'message' => 'required|string|max:1000',
+        ]);
+
+        $message = $request->input('message');
+        $groq = new \App\Services\GroqClient();
+
+        $systemPrompt = "You are Bibo, a friendly AI tutor for Filipino students.";
+
+        $response = $groq->post('chat/completions', [
+            'model' => 'llama-3.3-70b-versatile',
+            'messages' => [
+                ['role' => 'system', 'content' => $systemPrompt],
+                ['role' => 'user', 'content' => $message],
+            ],
+            'temperature' => 0.7,
+            'max_tokens' => 500,
+        ]);
+
+        $reply = $response->json()['choices'][0]['message']['content'] ?? 'No response.';
+
+        return response()->json(['response' => $reply]);
+
+    } catch (\Exception $e) {
+        \Log::error('TutorChat error: ' . $e->getMessage());
+        return response()->json(['response' => 'DEBUG: ' . $e->getMessage()], 200);
+    }
+}
+
+    public function achievements()
+    {
+        return view('pages.user.achievements');
+    }
 }

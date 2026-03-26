@@ -14,6 +14,11 @@ Route::middleware(AuthChecker::class)->group(function () {
     Route::get('profile', [PageController::class, 'profile']);
     Route::get('leaderboard', [PageController::class, 'leaderboard']);
     Route::get('settings', [PageController::class, 'settings']);
+    Route::get('research', [PageController::class, 'research']);
+    Route::get('tutor', [PageController::class, 'tutor']);    Route::post('tutor/chat', [PageController::class, 'tutorChat']);    Route::get('ai-tutor', function () {
+        return redirect('/tutor');
+    });
+     Route::get('achievements', [PageController::class, 'achievements']);
 });
 
 
